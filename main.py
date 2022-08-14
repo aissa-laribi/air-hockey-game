@@ -17,8 +17,13 @@ class HockeyPaddle(Widget):
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
             bounced = Vector(-1.1 * vx, vy)
-            vel = bounced * 1
+            vel = bounced*2
             ball.velocity = vel.x, vel.y + offset
+            if vx < -20 or vx > 20  :
+                bounced = bounced
+                vel = bounced * 0.9
+                ball.velocity = vel.x, vel.y + offset
+            print(vy)
 
 class HockeyBall(Widget):
     
@@ -34,6 +39,7 @@ class HockeyBall(Widget):
     #  will be called in equal intervals to animate the ball
     def move(self):
         self.pos = Vector(*self.velocity) + self.pos
+        
 
 class HockeyGame(Widget):
     ball = ObjectProperty(None)
@@ -41,9 +47,10 @@ class HockeyGame(Widget):
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
 
-    def serve_ball(self,vel=(4, 0)):
+    def serve_ball(self,vel=(6, 0)):
         self.ball.center = self.center
         self.ball.velocity = vel
+        
     
     def update(self, dt):
         # call ball.move and other stuff
@@ -56,18 +63,19 @@ class HockeyGame(Widget):
         if (self.ball.y < self.y) or (self.ball.top > self.top):
             self.ball.velocity_y *= -1
 
-        if ((self.ball.x < self.x) and (self.ball.y < 220 or self.ball.y > 320)) or (self.ball.right> self.width and (self.ball.y < 220 or self.ball.y > 320)):
+        if ((self.ball.x < self.x) and (self.ball.y < 190 or self.ball.y > 330)) or (self.ball.right> self.width and (self.ball.y < 190 or self.ball.y > 330)):
             self.ball.velocity_x *= -1
 
         
 
         # went of to a slot to score point?
-        if ((self.ball.x < self.x -100) and (self.ball.y > 220 and self.ball.y < 320)):
+        if ((self.ball.x < self.x -75) and (self.ball.y > 190 and self.ball.y < 330)):
             self.player2.score += 1
-            self.serve_ball(vel=(4, 0))
-        if (self.ball.right> self.width + 100 and (self.ball.y > 220 or self.ball.y < 320)):
+            self.serve_ball(vel=(6, 0))
+        if (self.ball.right> self.width + 75 and (self.ball.y > 190 or self.ball.y < 330)):
             self.player1.score += 1
-            self.serve_ball(vel=(-4, 0))
+            self.serve_ball(vel=(-6, 0))
+        print(self.ball.y)
 
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
