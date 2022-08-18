@@ -1,14 +1,51 @@
-#:kivy 1.0.9
-#:import hex kivy.utils.get_color_from_hex
 
+#:import hex kivy.utils.get_color_from_hex
+HockeyGameScreenManager: 
+    SettingsScreen:
+    GameScreen:
+    Final:
+
+<SettingsScreen>:
+    name:"settingsscreen"
+    AnchorLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'top'
+        pos: 0, root.height - 500
+        Image:
+            
+            source :'picture.png'
+            
+        
+    FloatLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'top'
+        
+        
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 300
+            font_size: 50
+            text: "1 PLAYER"       
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 200
+            font_size: 50
+            text: "2 PLAYERS"
+            on_release:app.root.current="gamescreen"
 <Slot>:
+    size_hint: None, None
     size: 5, 200
     canvas:
         Rectangle:
             pos: self.pos
             size: self.size
 <HockeyPaddle>:
-    size: 100, 100
+    size_hint: None, None
+    size: 90, 90
     canvas:
         Ellipse:
             source: "game-images/paddle.jpg"
@@ -17,17 +54,18 @@
 
 
 <HockeyBall>:
+    size_hint: None, None
     size: 75, 75
     canvas:
         Ellipse:
             pos: self.pos
-            source: "ball.jpg"
             size:self.size
 
 
             
 
-<HockeyGame>:
+<GameScreen>:
+    name: 'gamescreen'
     ball: hockey_ball
     player1: player_left
     player2: player_right
@@ -41,9 +79,7 @@
             size: self.size
         Color:
             rgb: (2, 1, 1)
-        Rectangle:
-            pos: self.center_x - 8, 0
-            size: 25, self.height
+        
         Ellipse:
             size: 250, 250
             pos: self.center_x - 120, 240
@@ -53,19 +89,12 @@
         Ellipse:
             size: 200, 200
             pos: self.center_x - 95, 265
-    Label:
-        font_size : 70
-        center_x: root.width / 4
-        text: "0"
-        top: root.top -50
-        text: str(root.player1.score)
-
-    Label:
-        font_size : 70
-        center_x: root.width * 3/4
-        text: "0"
-        top: root.top -50
-        text: str(root.player2.score)
+        Color:
+            rgb: (2, 1, 1)
+        Rectangle:
+            pos: self.center_x - 8, 0
+            size: 25, self.height
+    
 
     HockeyBall:
         id: hockey_ball
@@ -91,5 +120,46 @@
         x: root.width - self.width
         center_y: root.center_y
 
-        
+    Label:
+        font_size : 70
+        size_hint: None, None
+        center_x: root.width / 4
+        text: "0"
+        top: root.top -50
+        text: str(root.player1.score)
+
+    Label:
+        font_size : 70
+        size_hint: None, None
+        center_x: root.width * 3/4
+        text: "0"
+        top: root.top -50
+        text: str(root.player2.score)
             
+<Final>:
+    name:'Final'
+    FloatLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'center'
+        padding: 10
+        Button:
+            text: "REPLAY"
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 400
+            font_size: 50
+            on_release:app.root.current="gamescreen"
+        Button:
+            text: "MENU"
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 320
+            font_size: 50
+            on_release:app.root.current="settingsscreen"
+        Button:
+            text: "QUIT"
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 240
+            font_size: 50
+            
+        
+    

@@ -1,8 +1,26 @@
+from kivy.config import Config
+Config.set('graphics', 'width', '1200')
+Config.set('graphics', 'height', '675') 
+Config.set('graphics', 'resizable', '0')
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
+from kivy.uix.widget import Widget
+from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty
+from kivy.vector import Vector
+from kivy.clock import Clock
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
+
+class HockeyGameScreenManager(ScreenManager):
+    pass
+
+class SettingsScreen(Screen):
+    pass
+
 
 
 class Slot(Widget):
@@ -23,7 +41,7 @@ class HockeyPaddle(Widget):
                 bounced = bounced
                 vel = bounced * 0.9
                 ball.velocity = vel.x, vel.y + offset
-            print(vy)
+            
 
 class HockeyBall(Widget):
     
@@ -41,16 +59,23 @@ class HockeyBall(Widget):
         self.pos = Vector(*self.velocity) + self.pos
         
 
-class HockeyGame(Widget):
+class GameScreen(Screen):
     ball = ObjectProperty(None)
 
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
 
+    def on_enter(self, *args):
+        self.serve_ball()
+        self.function_interval = Clock.schedule_interval(self.update, 1.0/60.0)
+        print(type(self.function_interval))
+    
+
     def serve_ball(self,vel=(6, 0)):
         self.ball.center = self.center
         self.ball.velocity = vel
-        
+    
+    
     
     def update(self, dt):
         # call ball.move and other stuff
@@ -63,19 +88,27 @@ class HockeyGame(Widget):
         if (self.ball.y < self.y) or (self.ball.top > self.top):
             self.ball.velocity_y *= -1
 
-        if ((self.ball.x < self.x) and (self.ball.y < 190 or self.ball.y > 330)) or (self.ball.right> self.width and (self.ball.y < 190 or self.ball.y > 330)):
+        if ((self.ball.x < self.x) and (self.ball.y < 190 or self.ball.y > 360)) or (self.ball.right> self.width and (self.ball.y < 190 or self.ball.y > 360)):
             self.ball.velocity_x *= -1
 
         
 
         # went of to a slot to score point?
-        if ((self.ball.x < self.x -75) and (self.ball.y > 190 and self.ball.y < 330)):
+        if ((self.ball.x < self.x -75) and (self.ball.y > 190 and self.ball.y < 360)):
             self.player2.score += 1
             self.serve_ball(vel=(6, 0))
-        if (self.ball.right> self.width + 75 and (self.ball.y > 190 or self.ball.y < 330)):
+        if (self.ball.right> self.width + 75 and (self.ball.y > 190 or self.ball.y < 360)):
             self.player1.score += 1
             self.serve_ball(vel=(-6, 0))
-        print(self.ball.y)
+
+        self.Winner()
+        
+
+        
+            
+    def on_pre_leave(self, *args):
+        pass
+            
 
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
@@ -83,16 +116,36 @@ class HockeyGame(Widget):
             self.player1.center_x = touch.x 
         if touch.x > self.width - self.width / 3:
             self.player2.center_y = touch.y
+
+    def Winner(self):
+        Winner=""
+        if self.player1.score==2:
+            if self.manager.current != "Final":
+                self.manager.current = "Final"
+                Winner = "P1 with",str(self.player1.score) 
+        if self.player2.score == 2:
+            if self.manager.current !="Final":
+                self.manager.current = "Final"
+                Winner = "P2 with",str(self.player2.score)
+
         
 
+class Final(Screen):
+    def get_winner(self, game):
+        
+        game = HockeyGameScreenManager.get_screen(GameScreen)
+        return game.Winner()
+
+        
+        
+
+kv = Builder.load_file('hockey.kv')
 
 
 class HockeyApp(App):
     def build(self):
-        game = HockeyGame()
-        game.serve_ball()
-        Clock.schedule_interval(game.update, 1.0/60.0)
-        return game
+        return kv
 
 if __name__=="__main__":
     HockeyApp().run()
+
