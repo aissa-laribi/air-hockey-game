@@ -68,7 +68,7 @@ class GameScreen(Screen):
     def on_enter(self, *args):
         self.serve_ball()
         self.function_interval = Clock.schedule_interval(self.update, 1.0/60.0)
-        print(type(self.function_interval))
+        self.reset()
     
 
     def serve_ball(self,vel=(6, 0)):
@@ -101,14 +101,7 @@ class GameScreen(Screen):
             self.player1.score += 1
             self.serve_ball(vel=(-6, 0))
 
-        self.Winner()
-        
-
-        
-            
-    def on_pre_leave(self, *args):
-        pass
-            
+        self.winner()
 
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
@@ -117,24 +110,27 @@ class GameScreen(Screen):
         if touch.x > self.width - self.width / 3:
             self.player2.center_y = touch.y
 
-    def Winner(self):
-        Winner=""
+    def winner(self):
+        winner=""
         if self.player1.score==2:
             if self.manager.current != "Final":
                 self.manager.current = "Final"
-                Winner = "P1 with",str(self.player1.score) 
+                winner = "P1 with",str(self.player1.score) 
         if self.player2.score == 2:
             if self.manager.current !="Final":
                 self.manager.current = "Final"
-                Winner = "P2 with",str(self.player2.score)
+                winner = "P2 with",str(self.player2.score)
 
+    def reset(self):
+        self.player1.score = 0
+        self.player2.score = 0
         
 
 class Final(Screen):
     def get_winner(self, game):
         
         game = HockeyGameScreenManager.get_screen(GameScreen)
-        return game.Winner()
+        return game.winner()
 
         
         
