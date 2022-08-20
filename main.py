@@ -15,12 +15,12 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 
+
 class HockeyGameScreenManager(ScreenManager):
     pass
 
 class SettingsScreen(Screen):
     pass
-
 
 
 class Slot(Widget):
@@ -69,12 +69,12 @@ class GameScreen(Screen):
         self.serve_ball()
         self.function_interval = Clock.schedule_interval(self.update, 1.0/60.0)
         self.reset()
+        print(type(self.function_interval))
     
 
     def serve_ball(self,vel=(6, 0)):
         self.ball.center = self.center
         self.ball.velocity = vel
-    
     
     
     def update(self, dt):
@@ -102,39 +102,48 @@ class GameScreen(Screen):
             self.serve_ball(vel=(-6, 0))
 
         self.winner()
-
+        
+        
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
             self.player1.center_y = touch.y 
             self.player1.center_x = touch.x 
         if touch.x > self.width - self.width / 3:
             self.player2.center_y = touch.y
+            self.player2.center_x = touch.x 
 
     def winner(self):
-        winner=""
         if self.player1.score==2:
             if self.manager.current != "Final":
                 self.manager.current = "Final"
-                winner = "P1 with",str(self.player1.score) 
+                self.function_interval.cancel()
+                self.player1.center_x = 0
+                self.player2.center_x = self.width - 45
+                self.player1.center_y = 300
+                self.player2.center_y = 300
         if self.player2.score == 2:
             if self.manager.current !="Final":
                 self.manager.current = "Final"
-                winner = "P2 with",str(self.player2.score)
 
+                self.player1.center_x = 0
+                self.player2.center_x = self.width - 45
+                self.function_interval.cancel()
+                self.player1.center_y = self.center_y
+                self.player2.center_y = self.center_y
+   
+        
     def reset(self):
         self.player1.score = 0
         self.player2.score = 0
         
-
+ 
 class Final(Screen):
+    
     def get_winner(self, game):
-        
         game = HockeyGameScreenManager.get_screen(GameScreen)
-        return game.winner()
-
+        game.function_interval.cancel()
+    
         
-        
-
 kv = Builder.load_file('hockey.kv')
 
 
@@ -144,4 +153,3 @@ class HockeyApp(App):
 
 if __name__=="__main__":
     HockeyApp().run()
-
