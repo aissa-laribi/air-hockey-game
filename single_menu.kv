@@ -1,0 +1,61 @@
+
+#:import single single
+#:import game game
+#:import level1 level1
+HockeyGameScreenManager: 
+    Home:
+    GameSingle:
+    GameScreen:
+    Level1:
+    Final:
+<GameSingle>:
+    name:"gamesingle"
+
+    FloatLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'top'
+        
+        
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 520
+            font_size: 50
+            text: "LEVEL 1"
+            on_release:app.root.current="level1"    
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 420
+            font_size: 50
+            text: "LEVEL 2"
+            on_release:app.root.current="gamescreen"
+
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 320
+            font_size: 50
+            text: "LEVEL 3"
+            on_release:app.root.current="gamescreen"
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 220
+            font_size: 50
+            text: "LEVEL 4"
+            on_release:app.root.current="gamescreen"
+
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 120
+            font_size: 50
+            text: "LEVEL 5"
+            on_release:app.root.current="gamescreen"
+
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 20
+            font_size: 50
+            text: "MAIN MENU"
+            on_release:app.root.current="home"

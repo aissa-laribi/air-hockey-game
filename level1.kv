@@ -1,0 +1,137 @@
+
+#:import hex kivy.utils.get_color_from_hex
+HockeyGameScreenManager: 
+    GameSingle:
+    Level1:
+    Final:
+
+<Slot>:
+    size_hint: None, None
+    size: 5, 200
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+<HockeyPaddle>:
+    size_hint: None, None
+    size: 90, 90
+    canvas:
+        Ellipse:
+            source: "game-images/paddle.jpg"
+            pos: self.pos
+            size: self.size
+
+
+<HockeyBall>:
+    size_hint: None, None
+    size: 75, 75
+    canvas:
+        Ellipse:
+            pos: self.pos
+            size:self.size
+
+
+            
+
+<Level1>:
+    name: 'level1'
+    ball: hockey_ball
+    player1: player_left
+    player2: player_right
+
+
+    canvas:
+        Color:
+            rgba: hex('#0b04a8e8')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgb: (2, 1, 1)
+        
+        Ellipse:
+            size: 250, 250
+            pos: self.center_x - 120, 240
+            
+        Color:
+            rgba: hex('#0b04a8e8')
+        Ellipse:
+            size: 200, 200
+            pos: self.center_x - 95, 265
+        Color:
+            rgb: (2, 1, 1)
+        Rectangle:
+            pos: self.center_x - 8, 0
+            size: 25, self.height
+    
+
+    HockeyBall:
+        id: hockey_ball
+        center: self.parent.center
+
+    HockeyPaddle:
+        id: player_left
+        x: root.x
+        center_y: root.center_y
+        
+    HockeyPaddle:
+        id: player_right
+        x: root.width - self.width
+        center_y: root.center_y 
+
+    Slot:
+        
+        x: root.x
+        center_y: root.center_y
+        
+    Slot:
+        
+        x: root.width - self.width
+        center_y: root.center_y
+
+    Label:
+        font_size : 70
+        size_hint: None, None
+        center_x: root.width / 4
+        text: "0"
+        top: root.top -50
+        text: str(root.player1.score)
+
+    Label:
+        font_size : 70
+        size_hint: None, None
+        center_x: root.width * 3/4
+        text: "0"
+        top: root.top -50
+        text: str(root.player2.score)
+            
+<Final>:
+    name:'Final'
+    FloatLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'center'
+        padding: 10
+
+        Button:
+            text: "REPLAY"
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 400
+            font_size: 50
+            on_release:app.root.current="level1"
+        Button:
+            text: "MENU"
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 320
+            font_size: 50
+            on_release:app.root.current="home"
+        Button:
+            text: "QUIT"
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 240
+            font_size: 50
+            on_press: app.stop()
+        
+
+        
+    

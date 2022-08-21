@@ -1,0 +1,43 @@
+
+
+#:import home home
+#:import single single
+#:import game game
+HockeyGameScreenManager: 
+    Home:
+    GameSingle:
+    GameScreen:
+    Final:
+    Level1:
+<Home>:
+    name:"home"
+    AnchorLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'top'
+        pos: 0, root.height - 500
+        Image:
+            
+            source :'picture.png'
+            
+        
+    FloatLayout:
+        orientation: 'vertical'
+        anchor_x: 'center'
+        anchor_y: 'top'
+        
+        
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 300
+            font_size: 50
+            text: "1 PLAYER"
+            on_release:app.root.current="gamesingle"    
+        
+        Button:
+            size_hint: 0.3, 0.1
+            pos: root.width/2 - self.width/2, 200
+            font_size: 50
+            text: "2 PLAYERS"
+            on_release:app.root.current="gamescreen"
