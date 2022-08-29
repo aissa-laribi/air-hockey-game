@@ -14,6 +14,7 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
+from random import randint
 
 
 class HockeyGameScreenManager(ScreenManager):
@@ -69,7 +70,7 @@ class Level1(Screen):
         self.serve_ball()
         self.function_interval = Clock.schedule_interval(self.update, 1.0/60.0)
         self.reset()
-        print(type(self.function_interval))
+        self.ai_move
     
 
     def serve_ball(self,vel=(6, 0)):
@@ -102,7 +103,7 @@ class Level1(Screen):
             self.serve_ball(vel=(-6, 0))
 
         self.winner()
-        
+        self.ai_move()
         
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
@@ -111,6 +112,10 @@ class Level1(Screen):
         if touch.x > self.width - self.width / 3:
             self.player2.center_y = touch.y
             self.player2.center_x = touch.x 
+    
+    def ai_move(self):
+        mv = Vector(randint(-4, 3),randint(-15, 15))
+        self.player2.pos = mv + self.player2.pos
 
     def winner(self):
         if self.player1.score==2:
@@ -130,11 +135,15 @@ class Level1(Screen):
                 self.function_interval.cancel()
                 self.player1.center_y = self.center_y
                 self.player2.center_y = self.center_y
-   
+    
+    
+            
+
         
     def reset(self):
         self.player1.score = 0
         self.player2.score = 0
+        self.ai_move()
         
  
 class Final(Screen):
