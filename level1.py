@@ -115,7 +115,10 @@ class Level1(Screen):
     
     def ai_move(self):
         mv = Vector(randint(-4, 3),randint(-15, 15))
-        self.player2.pos = mv + self.player2.pos
+        if (self.player2.center_x >= self.width - self.width / 3) and (self.player2.center_y <= self.height):
+            self.player2.pos = mv + self.player2.pos
+        else:
+            self.player2.pos = mv - self.player2.pos
 
     def winner(self):
         if self.player1.score==2:

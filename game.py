@@ -69,7 +69,7 @@ class GameScreen(Screen):
         self.serve_ball()
         self.function_interval = Clock.schedule_interval(self.update, 1.0/60.0)
         self.reset()
-        print(type(self.function_interval))
+        
     
 
     def serve_ball(self,vel=(6, 0)):
