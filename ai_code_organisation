@@ -1,0 +1,52 @@
+Game(Kivy)
+	-play_step(action)
+		-> reward, game_over, goal_scored, goal_conceded
+
+Agent(Game, Model)
+Training:
+-state = get_state(Game)
+-action = get_move(state):
+	-Model.predict()
+-reward, game_over, goal_scored, goal_conceded = game.play_step(action)
+-new_state = get_state(game)
+-remember
+-model.train()
+
+Model (PyTorch)
+
+Linear_QNet(DCQ)
+- model.predict(state)
+	-> action
+
+
+## Reward
+
+Score a goal = +10
+Concede a goal = -10
+if game over:
+	if AI winner ==> +20:
+		else:
+			-20
+else:
+	= 0
+
+##Action:
+
+	left->[1,0,0,0]
+	right->[0,1,0,0]
+	bottom->[0,0,1,0]
+	up->[0,0,0,1]
+	left-up>[1,0,0,1]
+	right-up>[0,1,0,1]
+	right-bottom->[0,1,1,0]
+	left-bottom->[1,0,0,1]
+
+##State
+
+	[position_paddle_ai, ball_position, position_player_1, goals position]
+	
+
+	
+
+
+

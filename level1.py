@@ -66,6 +66,8 @@ class Level1(Screen):
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
 
+    ai_reward = NumericProperty(0)
+
     def on_enter(self, *args):
         self.serve_ball()
         self.function_interval = Clock.schedule_interval(self.update, 1.0/60.0)
@@ -97,9 +99,11 @@ class Level1(Screen):
         # went of to a slot to score point?
         if ((self.ball.x < self.x -75) and (self.ball.y > 190 and self.ball.y < 360)):
             self.player2.score += 1
+            self.ai_reward += 10
             self.serve_ball(vel=(6, 0))
         if (self.ball.right> self.width + 75 and (self.ball.y > 190 or self.ball.y < 360)):
             self.player1.score += 1
+            self.ai_reward -= 10
             self.serve_ball(vel=(-6, 0))
 
         self.winner()
@@ -108,20 +112,22 @@ class Level1(Screen):
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
             self.player1.center_y = touch.y 
-            self.player1.center_x = touch.x 
+        
         if touch.x > self.width - self.width / 3:
             self.player2.center_y = touch.y
             self.player2.center_x = touch.x 
     
     def ai_move(self):
-        mv = Vector(randint(-4, 3),randint(-15, 15))
         if (self.player2.center_x >= self.width - self.width / 3) and (self.player2.center_y <= self.height):
-            self.player2.pos = mv + self.player2.pos
-        else:
-            self.player2.pos = mv - self.player2.pos
+            self.player2.center_y = randint(0,600)
+        danger = bool
+        if self.ball.y > 100 or self.ball.y < 400:
+            danger is True
+
 
     def winner(self):
-        if self.player1.score==2:
+        if self.player1.score==5:
+            self.ai_reward -= 20
             if self.manager.current != "Final":
                 self.manager.current = "Final"
                 self.function_interval.cancel()
@@ -129,7 +135,8 @@ class Level1(Screen):
                 self.player2.center_x = self.width - 45
                 self.player1.center_y = 300
                 self.player2.center_y = 300
-        if self.player2.score == 2:
+        if self.player2.score == 5:
+            self.ai_reward += 20
             if self.manager.current !="Final":
                 self.manager.current = "Final"
 
@@ -138,15 +145,10 @@ class Level1(Screen):
                 self.function_interval.cancel()
                 self.player1.center_y = self.center_y
                 self.player2.center_y = self.center_y
-    
-    
-            
-
         
     def reset(self):
         self.player1.score = 0
         self.player2.score = 0
-        self.ai_move()
         
  
 class Final(Screen):
